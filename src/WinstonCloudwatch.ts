@@ -21,7 +21,7 @@ export interface WinstonCloudwatchOptions extends TransportStreamOptions {
 interface Log {
     level: string;
     message: string;
-    timestamp: string;
+    timestamp: number;
 }
 
 export class WinstonCloudwatch extends TransportStream {
@@ -53,14 +53,15 @@ export class WinstonCloudwatch extends TransportStream {
 
         clearTimeout(this.timeoutId);
 
-        if (this.logBuffer.length > this.logBufferSize) {
+        if (this.logBuffer.length >= this.logBufferSize) {
             await this.upload(this.logBuffer);
             this.logBuffer = [];
         } else {
-            this.logBuffer.push(info);
+            this.logBuffer.push({ ...info, timestamp: Date.now() });
 
-            this.timeoutId = setTimeout(() => {
-                this.upload(this.logBuffer);
+            this.timeoutId = setTimeout(async () => {
+                await this.upload(this.logBuffer);
+                this.logBuffer = [];
             }, this.timeout);
         }
 
@@ -68,7 +69,7 @@ export class WinstonCloudwatch extends TransportStream {
         callback();
     }
 
-    private async upload(logs: Log[]) {
+    async upload(logs: Log[]) {
         try {
             // Retrieve the sequence token (if required)
             const logStreamInfo = await this.cloudwatchClient.send(
@@ -83,18 +84,11 @@ export class WinstonCloudwatch extends TransportStream {
             );
             this.nextSequenceToken = logStream?.uploadSequenceToken;
 
-            // Prepare log events
-            const logEvents = logs.map((log) => ({
-                level: log.level,
-                message: log.message,
-                timestamp: Date.now(),
-            }));
-
             // Send log events
             const command = new PutLogEventsCommand({
                 logGroupName: this.logGroupName,
                 logStreamName: this.logStreamName,
-                logEvents,
+                logEvents: logs,
                 sequenceToken: this.nextSequenceToken,
             });
 
