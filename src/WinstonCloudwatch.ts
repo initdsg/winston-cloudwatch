@@ -53,12 +53,12 @@ export class WinstonCloudwatch extends TransportStream {
 
         clearTimeout(this.timeoutId);
 
+        this.logBuffer.push({ ...info, timestamp: Date.now() });
+
         if (this.logBuffer.length >= this.logBufferSize) {
             await this.upload(this.logBuffer);
             this.logBuffer = [];
         } else {
-            this.logBuffer.push({ ...info, timestamp: Date.now() });
-
             this.timeoutId = setTimeout(async () => {
                 await this.upload(this.logBuffer);
                 this.logBuffer = [];

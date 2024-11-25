@@ -99,12 +99,15 @@ describe("WinstonCloudwatch", () => {
         };
 
         WinstonCloudwatch.prototype.upload = jest.fn();
+        const mockFn = jest.fn();
+        const logCount = 2;
 
         // Log messages until buffer is full
-        for (let i = 0; i < 3; i++) {
-            await transport.log(mockLog, () => {});
+        for (let i = 0; i < logCount; i++) {
+            await transport.log(mockLog, mockFn);
         }
 
+        expect(mockFn).toHaveBeenCalledTimes(logCount);
         expect(WinstonCloudwatch.prototype.upload).toHaveBeenCalledTimes(1);
     });
 
@@ -116,12 +119,15 @@ describe("WinstonCloudwatch", () => {
         };
 
         WinstonCloudwatch.prototype.upload = jest.fn();
+        const mockFn = jest.fn();
+        const logCount = 1;
 
         // Log messages
-        for (let i = 0; i < 2; i++) {
-            await transport.log(mockLog, () => {});
+        for (let i = 0; i < logCount; i++) {
+            await transport.log(mockLog, mockFn);
         }
 
+        expect(mockFn).toHaveBeenCalledTimes(logCount);
         expect(WinstonCloudwatch.prototype.upload).toHaveBeenCalledTimes(0);
     });
 
