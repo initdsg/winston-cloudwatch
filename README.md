@@ -4,8 +4,8 @@ A Winston transport for AWS CloudWatch Logs that provides buffered logging capab
 
 ## Why use this transport?
 
-This library should be able to replace the existing transport
-https://github.com/lazywithclass/winston-cloudwatch . The existing
+This library is meant to replace the existing transport
+https://github.com/lazywithclass/winston-cloudwatch. The existing
 winston-cloudwatch library, while functional, has several limitations and
 challenges that our new implementation addresses:
 
