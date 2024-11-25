@@ -1,5 +1,5 @@
 {
-  "name": "winston-cloudwatch",
+  "name": "@initd.sg/winston-cloudwatch",
   "version": "1.0.0",
   "description": "Winston transport for AWS Cloudwatch",
   "main": "./dist/index.js",
@@ -8,7 +8,10 @@
   "files": [
     "dist"
   ],
-  "repository": "git@github.com:initdsg/winston-cloudwatch.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/initdsg/winston-cloudwatch.git"
+  },
   "author": "Raziman Mahathir <raziman@initd.sg>",
   "license": "MIT",
   "private": false,
