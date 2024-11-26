@@ -97,3 +97,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Note
 
 This transport is designed for use in Node.js environments and requires proper AWS credentials configuration.
+
+## Resources
+
+https://medium.com/@initd.sg/logging-to-aws-cloudwatch-with-winston-in-typescript-e7b54cc15f2d
